@@ -33,7 +33,7 @@ class DataModule:
         self.conn = sqlite3.connect('./lock/master.db')
         cursor = self.conn.cursor()
         sql = """create table if not exists `problems` (
-            `id` INT PRIMARY KEY,
+            `id` INTEGER PRIMARY KEY AUTOINCREMENT,
             `no` INT NOT NULL DEFAULT '0' UNIQUE, --COMMENT '题号'
             `hard` TINYINT NOT NULL DEFAULT '0', --COMMENT '1简单 2中等 3困难 4精通 5尝试',
             `title` VARCHAR(100) NOT NULL DEFAULT '', -- COMMENT '题目标题',
