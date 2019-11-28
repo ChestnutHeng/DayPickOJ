@@ -4,13 +4,34 @@
 #include <algorithm>
 #include <vector>
 
+#define P(x) cout << x << endl;
+
 using namespace std;
+
+struct ListNode {
+    int val;
+    struct ListNode *next;
+ListNode(int x){val = x;next=NULL;}
+};
 
 void print(int *arr, int size){
 	for(int i =0; i < size; ++i){
 		cout << arr[i] << " ";
 	}
 	cout << endl;
+}
+
+void plinklist(ListNode *l){
+	while(l){
+		cout << l->val << " ";
+		l = l->next;
+	}
+	cout << endl;
+}
+
+template <typename T>
+void print(T v){
+	cout << v << endl;
 }
 
 template <typename T>
@@ -27,6 +48,24 @@ vector<T> rd_vec(){
 		ans.push_back(buf);
 	}
 	return ans;
+}
+
+ListNode *rd_list(){
+	// read a line
+	stringstream ss;
+	string str;
+	getline(cin, str);
+	ss << str;
+	// set ans
+	ListNode *head = new ListNode(0);
+	ListNode *t = head;
+	int buf;
+	while(ss >> buf){
+		t->next = new ListNode(buf);
+		t = t->next;
+	}
+	t->next = NULL;
+	return head->next;
 }
 
 template <typename T>
@@ -50,7 +89,7 @@ T* rd_arr(int &size){
 	string str;
 	vector<T> ans = rd_vec<T>();
 	size = ans.size();
-	T *arr = new T[ans.size()];
+	T arr[ans.size()];
 	for(int i = 0; i < ans.size(); ++i){
 		arr[i] = ans[i];
 	}

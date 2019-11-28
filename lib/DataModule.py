@@ -11,7 +11,11 @@ class Problem:
     text = ""
     total_commit = 0
     total_passed = 0
-    def __init__(self, no, hard, title, text, total_commit, total_passed):
+
+    def __init__(self):
+        pass
+
+    def Init(self, no, hard, title, text, total_commit, total_passed):
         self.no = no
         self.hard = hard
         self.title = title
@@ -54,11 +58,21 @@ class DataModule:
         for row in cursor:
             if len(row) != 6:
                 continue
-            problems.append(Problem(*row))
+            p = Problem()
+            p.Init(*row)
+            problems.append(p)
         if problems:
             self.problems = problems
         cursor.close()
     
+    def CatchNo(self, no):
+        if not self.problems:
+            self.CatchAll()
+        for v in self.problems:
+            if v.no == no:
+                return v
+        print("Not find index %d!" % (no))
+
     def Pick(self):
         if not self.problems:
             return None
@@ -75,13 +89,22 @@ class DataModule:
         sql = '''update problems set total_commit=total_commit+1 where no=''' + str(no)
         cursor.execute(sql)
         self.conn.commit()
-        print(sql)
+        #print(sql)
         cursor.close()
     
     def PassCommit(self, no):
         cursor = self.conn.cursor()
         sql = '''update problems set total_commit=total_commit+1, total_passed=total_passed+1 where no=''' + str(no)
-        print(sql)
+        #print(sql)
+        cursor.execute(sql)
+        self.conn.commit()
+        cursor.close()
+    
+    def InsertProblem(self, problem):
+        cursor = self.conn.cursor()
+        sql = '''insert into problems values (NULL, %d, %d, "%s", "%s", 0, 0)''' % \
+        (problem.no, problem.hard, problem.title, problem.text)
+        #print(sql)
         cursor.execute(sql)
         self.conn.commit()
         cursor.close()
