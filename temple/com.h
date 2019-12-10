@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <vector>
 
+#include <string.h>
+
 #define P(x) cout << x << endl;
 
 using namespace std;
@@ -14,7 +16,8 @@ struct ListNode {
 ListNode(int x){val = x;next=NULL;}
 };
 
-void print(int *arr, int size){
+template <typename T>
+void print(T *arr, int size){
 	for(int i =0; i < size; ++i){
 		cout << arr[i] << " ";
 	}
