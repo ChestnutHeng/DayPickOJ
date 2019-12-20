@@ -1,4 +1,4 @@
-// ¿ìÅÅÄ£°å
+// å¿«æ’æ¨¡æ¿
 #include "com.h"
 
 int partition(int *arr, int lo, int hi){

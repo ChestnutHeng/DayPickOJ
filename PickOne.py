@@ -61,16 +61,18 @@ class Commander:
             try:
                 while True:
                     if says == '':
-                        says = input('Enter [Index] to choose:')
-                    if says in ['q', 'quit', 'exit', 'Q']:
+                        says = input('Enter [Index] to choose:').strip()
+                    elif says in ['q', 'quit', 'exit', 'Q']:
                         self.locker.release()
+                        return
                     elif says.isdigit():
-                        v = self.data.CatchNo(int(no))
+                        v = self.data.CatchNo(int(says))
                         self.now_locker.acquire_store(str(v.no))
                         self.painter.paint_problem(v)
                         return
                     elif not says.isdigit():
                         print('Please enter a index number!')
+                        says = ''
             except BaseException as e:
                 print(e)
                 self.locker.release()
