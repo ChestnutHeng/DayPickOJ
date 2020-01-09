@@ -1,6 +1,7 @@
 
 import os
-from subprocess import run, PIPE
+import subprocess
+import time
 
 class Runner:
     def __init__(self, exe, no):
@@ -49,22 +50,29 @@ class Runner:
         if no not in self.case_map:
             print("Not find output of ", no)
         else:
+            s = time.clock()
             for k, v in self.case_map[no].items():
                 #print("run_and_record test case", k, v)
                 if 'in' in v and 'out' in v and 'no' in v:
-                    p = run([self.exe_file], stdout=PIPE, input= v['in'], encoding='ascii')
-                    #print('ret:', p.returncode)
-                    if p.returncode != 0:
-                        print('=== BAD MAIN RETURN VALUE (CASE AT %d/%d) ===' %(v['no'], self.case_co))
-                        return False
-                    if p.stdout.strip() != v['out'].strip():
-                        print('=== WRONG ANSWER (CASE AT %d/%d) ===\nInput:%s\nExpect:%s\nActual:%s\n' \
-                            % (v['no'], self.case_co, v['in'].strip(), v['out'].strip(), p.stdout.strip()))
+                    try:
+                        p = subprocess.run([self.exe_file], stdout=subprocess.PIPE, input= v['in'], encoding='ascii', timeout=3)
+                        #print('ret:', p.returncode)
+                        if p.returncode != 0:
+                            print('=== BAD MAIN RETURN VALUE (CASE AT %d/%d) ===' %(v['no'], self.case_co))
+                            return False
+                        if p.stdout.strip() != v['out'].strip():
+                            print('=== WRONG ANSWER (CASE AT %d/%d) ===\nInput:%s\nExpect:%s\nActual:%s\n' \
+                                % (v['no'], self.case_co, v['in'].strip(), v['out'].strip(), p.stdout.strip()))
+                            return False
+                    except subprocess.TimeoutExpired:
+                        print('=== TIME LIMIT EXPIRED 3s (CASE AT %d/%d) ===\nInput:%s\nExpect:%s\nTimeout!' \
+                                % (v['no'], self.case_co, v['in'].strip(), v['out'].strip()))
                         return False
                 else:
                     print('=== BAD CASE K/V ===', k, v)
                     return False
-            print('=== PASSED ( %d/%d CASES ) ===' % (self.case_co, self.case_co))
+            e = time.clock()
+            print('=== PASSED ( %d/%d CASES ) %d ms ===' % (self.case_co, self.case_co, (e - s)*1000 ))
             return True
                     
 

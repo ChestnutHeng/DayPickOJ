@@ -1,8 +1,8 @@
-// ©Лееё╛╣зkн╩ё╛╤Ч╥ждё╟Е
+// О©╫О©╫О©╫еёО©╫О©╫О©╫kн╩О©╫О©╫О©╫О©╫О©╫О©╫дёО©╫О©╫
 
 #include <iostream>
 #include <vector>
-#include "com.h"
+#include "../temple/com.h"
 
 using namespace std;
 

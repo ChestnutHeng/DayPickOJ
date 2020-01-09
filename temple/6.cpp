@@ -1,6 +1,6 @@
 // 最大不同子序列（leetcode 3）
 
-#include "com.h"
+#include "../temple/com.h"
 
 
 int lengthOfLongestSubstring(string s){

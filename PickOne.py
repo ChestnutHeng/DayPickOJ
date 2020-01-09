@@ -1,5 +1,6 @@
 import sys
 import os
+import shutil
 
 from lib.DataModule import DataModule, Problem
 from lib.DataTools import Locker,Painter
@@ -15,6 +16,7 @@ class Commander:
         self.now_locker = Locker("_lock_no")
         self.history = []
     
+    # 命令行帮助
     def cmd_helper(self):
         print("./python PickOne.py [cmd]")
         print("pick                 --- choose a random problem")
@@ -24,6 +26,7 @@ class Commander:
         print("quit                 --- lose now problem")
         print("add                  --- add problem")
 
+    # 随机选一个问题
     def pick(self):
         if self.locker.acquire():
             try:
@@ -37,7 +40,7 @@ class Commander:
                     # parse input
                     says = input('Enter [YES/Y] to choose:')
                     if says in ['yes', 'y', 'Y', 'YES']:
-                        self.now_locker.acquire_store(str(ans.no))
+                        self.__choose_problem_handle__(str(ans.no))
                         break
                     elif says in ['q', 'quit', 'exit', 'Q']:
                         self.locker.release()
@@ -51,11 +54,13 @@ class Commander:
             no, ok = self.now_locker.acquire_read()
             print("You have choose a problem %s . submit it!" % no)
     
+    # 查看问题列表
     def index(self):
         for v in self.data.problems:
             self.painter.paint_problem_line(v)
         self.choose()
     
+    # 从列表中选择问题
     def choose(self, says=''):
         if self.locker.acquire():
             try:
@@ -67,8 +72,8 @@ class Commander:
                         return
                     elif says.isdigit():
                         v = self.data.CatchNo(int(says))
-                        self.now_locker.acquire_store(str(v.no))
                         self.painter.paint_problem(v)
+                        self.__choose_problem_handle__(str(v.no))
                         return
                     elif not says.isdigit():
                         print('Please enter a index number!')
@@ -81,7 +86,18 @@ class Commander:
             print("You have choose a problem %s . submit it!" % no)
             v = self.data.CatchNo(int(no))
             self.painter.paint_problem(v)
+
+    def __choose_problem_handle__(self, ind):
+        ind = str(ind)
+        # 问题锁
+        self.now_locker.acquire_store(ind)
+        # 从模板创建文件
+        fname = ind + ".cpp"
+        if not os.path.isfile('./try/' + fname):
+            shutil.copy2('./temple/' + fname, './try/')
+        print("Please modify the file: %s" % os.path.abspath('./try/' + fname))
     
+    # 提交问题
     def submit(self, exe):
         no, ok = self.now_locker.acquire_read()
         if ok:
@@ -96,10 +112,12 @@ class Commander:
             print("Please pick a problem first.")
             self.pick()
 
+    # 放弃问题
     def quit(self):
         self.now_locker.release()
         self.locker.release()
 
+    # 添加问题
     def add(self):
         p = Problem()
         print('Insert a problem.')
@@ -118,8 +136,13 @@ class Commander:
         while not p.text:
             p.text = input('Description: ')
         self.data.InsertProblem(p)
-        print('Insert sunccess !')
+        # 创建模板
+        fname = str(p.no) + ".cpp"
+        if not os.path.isfile('./temple/' + fname):
+            shutil.copy2('./temple/row.cpp', './temple/' + fname)
+        print("Insert sunccess ! Gen file template: %s" % os.path.abspath('./temple/' + fname))
 
+    # 解析命令
     def parse_cmd(self):
         if len(sys.argv) < 2:
             self.cmd_helper()
@@ -145,6 +168,7 @@ class Commander:
                 self.choose(sys.argv[2])
             elif len(sys.argv) == 2:
                 self.choose()
+
     def wait(self):
         self.parse_cmd()
 

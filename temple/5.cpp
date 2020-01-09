@@ -1,6 +1,6 @@
 // 链表相加模板（leetcode 1）
 
-#include "com.h"
+#include "../temple/com.h"
 
 
 struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2){

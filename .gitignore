@@ -1,4 +1,6 @@
 */__pycache__/*
 *.pyc
 *.exe
-com.h
+*.stackdump
+.vscode/
+try/

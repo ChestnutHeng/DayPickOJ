@@ -1,5 +1,5 @@
 // 快排模板
-#include "com.h"
+#include "../temple/com.h"
 
 int partition(int *arr, int lo, int hi){
 	int pivot = arr[hi];

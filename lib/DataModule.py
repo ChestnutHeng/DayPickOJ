@@ -52,7 +52,7 @@ class DataModule:
     def CatchAll(self):
         problems = []
         cursor = self.conn.cursor()
-        sql = '''select no, hard, title, text, total_commit, total_passed from problems'''
+        sql = '''select no, hard, title, text, total_commit, total_passed from problems order by no'''
         #print(sql)
         cursor.execute(sql)
         for row in cursor:

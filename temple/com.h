@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <vector>
 
+#include <stdarg.h>
 #include <string.h>
 
 #define P(x) cout << x << endl;
@@ -17,10 +18,54 @@ ListNode(int x){val = x;next=NULL;}
 };
 
 template <typename T>
+void print(T v){
+	cout << v << endl;
+}
+
+template <typename T>
+void print(vector<T> arr){
+	for(int i =0; i < arr.size(); ++i){
+		if(i == arr.size() - 1){
+			cout << arr[i];
+		}else{
+			cout << arr[i] << " ";
+		}
+	}
+	cout << endl;
+}
+
+template <typename T>
+void print(vector<vector<T> > arr){
+	for(int i =0; i < arr.size(); ++i){
+		for(int j =0; j < arr[i].size(); ++j){
+			if(j == arr[i].size() - 1){
+				cout << arr[i][j];
+			}else{
+				cout << arr[i][j] << " ";
+			}
+		}
+		if(i != arr.size() - 1){
+			cout << ",";
+		}
+	}
+	cout << endl;
+}
+
+template <typename T>
 void print(T *arr, int size){
 	for(int i =0; i < size; ++i){
 		cout << arr[i] << " ";
 	}
+	cout << endl;
+}
+
+
+template <typename Arg, typename... Args>
+void print(Arg&& arg, Args&&... args)
+{
+    cout << std::forward<Arg>(arg);
+    using expander = int[];
+    (void)expander{0, (void(cout << ',' << std::forward<Args>(args)), 0)...};
 	cout << endl;
 }
 
@@ -30,11 +75,6 @@ void plinklist(ListNode *l){
 		l = l->next;
 	}
 	cout << endl;
-}
-
-template <typename T>
-void print(T v){
-	cout << v << endl;
 }
 
 template <typename T>
@@ -86,13 +126,13 @@ T rd_val(){
 }
 
 template <typename T>
-T* rd_arr(int &size){
+T* rd_arr(int *size){
 	// read a line
 	stringstream ss;
 	string str;
 	vector<T> ans = rd_vec<T>();
-	size = ans.size();
-	T arr[ans.size()];
+	*size = ans.size();
+	T *arr = new T[ans.size()];
 	for(int i = 0; i < ans.size(); ++i){
 		arr[i] = ans[i];
 	}

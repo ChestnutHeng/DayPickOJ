@@ -1,6 +1,6 @@
 // 二分模板
 
-#include "com.h"
+#include "../temple/com.h"
 
 
 int bs(int *arr, int size, int tar){
